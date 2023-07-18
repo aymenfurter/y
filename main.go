@@ -21,6 +21,7 @@ var (
 		".go":   true,
 		".py":   true,
 		".js":   true,
+		".php":  true,
 		".java": true,
 		// add more languages as needed
 	}
@@ -90,7 +91,7 @@ func analyzeCodeWithChatBot(code string, filepath string) {
 	messages := []openai.ChatCompletionMessage{
 		{
 			Role:    "system",
-			Content: "You are a pentest copilot assisting a security researcher identifying security vulnverabilities. Use OWASP best practice. Analyze the following code, think through it step-by-step. At the end of your analysis, give a security store from 1-10 in terms of severity. If there is none, state: 0\n\nExample:\n# Result\nScore: 0/10",
+			Content: "You are a pentest copilot assisting a security researcher identifying security vulnverabilities. Use OWASP best practice. Analyze the following code, think through it step-by-step. At the end of your analysis, give a security store from 1-10 in terms of severity. 10/10=code contains a severe vulnerability, 1/10= there are no vulnerabilities in the code. If there is none, state: 0\n\nExample:\n# Result\nScore: 0/10",
 		},
 		{
 			Role:    "user",
