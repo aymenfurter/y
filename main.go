@@ -120,22 +120,17 @@ func chatWithopenaiWithMessages(messages []openai.ChatCompletionMessage, filepat
 		return "", err
 	}
 
-	// Extract from text "Score: 0" -> 0
-	score := strings.Split(chatResp.Choices[0].Message.Content, "Score: ")[1]
+	scores := strings.Split(chatResp.Choices[0].Message.Content, "Score: ")
+	if len(scores) < 2 {
+		fmt.Println("No score found in message content")
+		fmt.Println("Details: " + chatResp.Choices[0].Message.Content)
+		return "", nil
+	}
+	score := scores[1]
 
-	// check if score 9 or 10
-	// check if score contains 9
-	if strings.Contains(score, "9/10") || strings.Contains(score, "10/10") {
+	if strings.Contains(score, "7") || strings.Contains(score, "8") || strings.Contains(score, "9") || strings.Contains(score, "10/10") {
 		fmt.Println("💣 This file has high severity: "+filepath, score)
 		fmt.Println("Details: " + chatResp.Choices[0].Message.Content)
-
-		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Continue? (Y/N): ")
-		text, _ := reader.ReadString('\n')
-		text = strings.Replace(text, "\n", "", -1)
-		if text == "Y" {
-			fmt.Println("Continuing...")
-		}
 
 	} else {
 		fmt.Println("Completed " + filepath)
